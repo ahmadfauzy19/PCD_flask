@@ -336,10 +336,51 @@ def threshold(lower_thres, upper_thres):
     new_img.save("static/img/img_now.jpg")
 
 def dilasi():
-    return 1
+    img = loadImage040("static/img/img_now.jpg")
+    kernel = np.ones((3,3), np.uint8)
+    dilated_image = cv2.dilate(img, kernel, iterations=1)
+    new_img = Image.fromarray(dilated_image)
+    new_img.save("static/img/img_now.jpg")
 
 def erosi():
-    return 1
+    img = loadImage040("static/img/img_now.jpg")
+    kernel = np.ones((3,3), np.uint8)
+    dilated_image = cv2.erode(img, kernel, iterations=1)
+    new_img = Image.fromarray(dilated_image)
+    new_img.save("static/img/img_now.jpg")
+
+def opening():
+
+    img = loadImage040("static/img/img_now.jpg")
+    kernel = np.ones((3,3), np.uint8)
+    opening_image = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    new_img = Image.fromarray(opening_image)
+    new_img.save("static/img/img_now.jpg")
+
+def closing():
+    img = loadImage040("static/img/img_now.jpg")
+    kernel = np.ones((3,3), np.uint8)
+    opening_image = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+    new_img = Image.fromarray(opening_image)
+    new_img.save("static/img/img_now.jpg")
+
+
+
+
+def counting():
+    img = loadImage040("static/img/img_now.jpg")
+    image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, threshold_img = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+    kernel = np.ones((3, 3), np.uint8)
+    erosi_img = cv2.erode(threshold_img, kernel, iterations=3)
+    contours, _ = cv2.findContours(erosi_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    gerigi_with_contours = img.copy()
+    cv2.drawContours(gerigi_with_contours, contours, -1, (0, 255, 0), 2)
+    num_blobs = len(contours)
+    new_img = Image.fromarray(gerigi_with_contours)
+    new_img.save("static/img/img_now.jpg")
+    return num_blobs
+
 
 
 
