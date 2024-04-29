@@ -194,6 +194,8 @@ def histogram_rgb():
 def thresholding():
     lower_thres = int(request.form['lower_thres'])
     upper_thres = int(request.form['upper_thres'])
+    print("Lower Threshold:", lower_thres)
+    print("Upper Threshold:", upper_thres)
     image_processing.threshold(lower_thres, upper_thres)
     return render_template("uploaded.html", file_path="img/img_now.jpg")
 
