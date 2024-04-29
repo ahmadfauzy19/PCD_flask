@@ -4,14 +4,6 @@
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <div class="row">
-                    {% if j == 1%}
-                    <div class="col-lg-12">
-                        <h3 class="text-center mb-4">Normal</h3>
-                        <div class="d-flex justify-content-center">
-                            <img class="img-fluid" src="{{ url_for('static', filename=file_path) }}" alt="image here" style="max-width: 30%; height: auto;">
-                        </div>
-                    </div>
-                    {% else %}
                     <div class="col-lg-6">
                         <h3 class="text-center mb-4">Normal</h3>
                         <div class="d-flex justify-content-center">
@@ -24,7 +16,9 @@
                             <img class="img-fluid" src="{{ url_for('static', filename=file_path) }}" alt="After Image" style="max-width: 80%; height: auto;">
                         </div>
                     </div>
-                    {% endif %}
+                </div>
+                <div class="text-center mt-4">
+                    <h4>Objek di dalam gambar berjumlah {{ Hasil }}</h4>
                 </div>
             </div>
         </div>
