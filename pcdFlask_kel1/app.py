@@ -69,7 +69,7 @@ def upload():
 @nocache
 def normal():
     copyfile("static/img/img_normal.jpg", "static/img/img_now.jpg")
-    return render_template("uploaded.html", file_path="img/img_now.jpg")
+    return render_template("uploaded.html", file_path="img/img_now.jpg", j=1)
 
 
 @app.route("/grayscale", methods=["POST"])
@@ -198,6 +198,36 @@ def thresholding():
     print("Upper Threshold:", upper_thres)
     image_processing.threshold(lower_thres, upper_thres)
     return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+@app.route("/dilasi", methods=["POST"])
+@nocache
+def dilasi():
+    image_processing.dilasi()
+    return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+@app.route("/erosi", methods=["POST"])
+@nocache
+def erosi():
+    image_processing.erosi()
+    return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+@app.route("/opening", methods=["POST"])
+@nocache
+def opening():
+    image_processing.opening()
+    return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+@app.route("/closing", methods=["POST"])
+@nocache
+def closing():
+    image_processing.closing()
+    return render_template("uploaded.html", file_path="img/img_now.jpg")
+
+@app.route("/counting", methods=["POST"])
+@nocache
+def counting():
+    hasil = image_processing.counting()
+    return render_template("counting.html",Hasil = hasil, file_path="img/img_now.jpg")
 
 
 if __name__ == '__main__':
