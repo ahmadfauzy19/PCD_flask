@@ -1,10 +1,12 @@
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
-import math
+import json
+from skimage.morphology import skeletonize
 from collections import Counter
 from pylab import savefig
 import cv2
+import os
 
 
 #modul modul pembantu
@@ -57,46 +59,6 @@ def zoomin():
     img_arr = np.asarray(img)
     img = Image.fromarray(img_arr)
     img.save("static/img/img_now.jpg")
-    # img = Image.open("static/img/img_now.jpg")
-    # img = img.convert("RGB")
-    # img_arr = np.asarray(img)
-    # new_size = ((img_arr.shape[0] * 2),
-    #             (img_arr.shape[1] * 2), img_arr.shape[2])
-    # new_arr = np.full(new_size, 255)
-    # new_arr.setflags(write=1)
-
-    # r = img_arr[:, :, 0]
-    # g = img_arr[:, :, 1]
-    # b = img_arr[:, :, 2]
-
-    # new_r = []
-    # new_g = []
-    # new_b = []
-
-    # for row in range(len(r)):
-    #     temp_r = []
-    #     temp_g = []
-    #     temp_b = []
-    #     for i in r[row]:
-    #         temp_r.extend([i, i])
-    #     for j in g[row]:
-    #         temp_g.extend([j, j])
-    #     for k in b[row]:
-    #         temp_b.extend([k, k])
-    #     for _ in (0, 1):
-    #         new_r.append(temp_r)
-    #         new_g.append(temp_g)
-    #         new_b.append(temp_b)
-
-    # for i in range(len(new_arr)):
-    #     for j in range(len(new_arr[i])):
-    #         new_arr[i, j, 0] = new_r[i][j]
-    #         new_arr[i, j, 1] = new_g[i][j]
-    #         new_arr[i, j, 2] = new_b[i][j]
-
-    # new_arr = new_arr.astype('uint8')
-    # new_img = Image.fromarray(new_arr)
-    # new_img.save("static/img/img_now.jpg")
 
 
 def zoomout():
@@ -106,25 +68,6 @@ def zoomout():
     img_arr = np.asarray(img)
     img = Image.fromarray(img_arr)
     img.save("static/img/img_now.jpg")
-    # img = Image.open("static/img/img_now.jpg")
-    # img = img.convert("RGB")
-    # x, y = img.size
-    # new_arr = Image.new("RGB", (int(x / 2), int(y / 2)))
-    # r = [0, 0, 0, 0]
-    # g = [0, 0, 0, 0]
-    # b = [0, 0, 0, 0]
-
-    # for i in range(0, int(x/2)):
-    #     for j in range(0, int(y/2)):
-    #         r[0], g[0], b[0] = img.getpixel((2 * i, 2 * j))
-    #         r[1], g[1], b[1] = img.getpixel((2 * i + 1, 2 * j))
-    #         r[2], g[2], b[2] = img.getpixel((2 * i, 2 * j + 1))
-    #         r[3], g[3], b[3] = img.getpixel((2 * i + 1, 2 * j + 1))
-    #         new_arr.putpixel((int(i), int(j)), (int((r[0] + r[1] + r[2] + r[3]) / 4), int(
-    #             (g[0] + g[1] + g[2] + g[3]) / 4), int((b[0] + b[1] + b[2] + b[3]) / 4)))
-    # new_arr = np.uint8(new_arr)
-    # new_img = Image.fromarray(new_arr)
-    # new_img.save("static/img/img_now.jpg")
 
 
 def move_left():
@@ -381,7 +324,115 @@ def counting():
     new_img.save("static/img/img_now.jpg")
     return num_blobs
 
+def ekstra_citra(lokasi_citra):
+    citra = cv2.imread(lokasi_citra, cv2.IMREAD_GRAYSCALE)
+    _, citra_biner = cv2.threshold(citra, 128, 255, cv2.THRESH_BINARY_INV)
+    kontur, _ = cv2.findContours(citra_biner, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    kontur_terbesar = max(kontur, key=cv2.contourArea)
+    return kontur_terbesar
+
+def penipisan_citra(lokasi_citra):
+    citra = cv2.imread(lokasi_citra, cv2.IMREAD_GRAYSCALE)
+    _, citra_biner = cv2.threshold(citra, 128, 255, cv2.THRESH_BINARY_INV)
+    citra_penipisan = skeletonize(citra_biner)
+    citra_penipisan = citra_penipisan.astype(np.uint8)
+    kontur, _ = cv2.findContours(citra_penipisan, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    citra_penipisan = max(kontur, key=cv2.contourArea)
+    return citra_penipisan
+
+def hitung_freeman_chain_code(kontur):
+    kode_chain = []
+    titik_valid = []
+    arah = [0, 7, 6, 5, 4, 3, 2, 1]
+    perubahan = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
+
+    # Mendapatkan titik-titik kontur
+    titik = [tuple(poin[0]) for poin in kontur]
+
+    # Menemukan titik awal (titik paling kiri)
+    indeks_awal = titik.index(min(titik, key=lambda x: x[0]))
+
+    titik_sekarang = titik[indeks_awal]
+    titik_awal = titik[indeks_awal]
+
+    # Mengikuti kontur dan menghasilkan kode chain
+    while True:
+        found = False
+        ra={0,1,2,3,4,5,6,7}
+        for i in ra:
+            next_point = (titik_sekarang[0] + perubahan[i][0], titik_sekarang[1] + perubahan[i][1])
+            if next_point in titik:
+                found = True
+                if next_point in titik_valid:
+                    continue
+                else :
+                    titik_valid.append(next_point)
+                    break
+        if not found:
+            break
+        kode_chain.append(arah[i])  
+        titik_sekarang = next_point
+        if titik_sekarang == titik_awal:
+            break
+
+    return kode_chain
 
 
+def simpan_ke_json(basis_pengetahuan, nama_file):
+    with open(nama_file, "w") as file:
+        json.dump(basis_pengetahuan, file)
 
+def simpan_gambar():
+    kode_chain_freeman_digit = {}
+    kode_chain_penipisan_digit = {}
+    nama_citra = []
+    nama_citra = ["nol", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan"]
+    for digit, nama in enumerate(nama_citra):
+        lokasi_citra = f"static/assets/images/daftar_gambar/{nama}.png"
+        kontur = ekstra_citra(lokasi_citra)
+        kode_chain = hitung_freeman_chain_code(kontur)
+        
+        kode_chain_freeman_digit[digit] = kode_chain
+        citra_penipisan = penipisan_citra(lokasi_citra)
+        kode_chain = hitung_freeman_chain_code(citra_penipisan)
+        kode_chain_penipisan_digit[digit] = kode_chain
+
+    simpan_ke_json(kode_chain_freeman_digit, "knowledge_base_metode1.json")
+    simpan_ke_json(kode_chain_penipisan_digit, "knowledge_base_metode2.json")
+
+    return kode_chain_freeman_digit, kode_chain_penipisan_digit
+
+def kenali_digit(kode_chain, basis_pengetahuan):
+    jarak_minimum = float('inf')
+    digit_terkenali = None
+    for digit, referensi_kode_chain in basis_pengetahuan.items():
+        jarak = sum(1 for a, b in zip(kode_chain, referensi_kode_chain) if a != b)
+        if jarak < jarak_minimum:
+            jarak_minimum = jarak
+            digit_terkenali = digit
+    return digit_terkenali
+
+def uji_pengenalan_angka(daftar_citra_uji, basis_pengetahuan, metode):
+    digit=[]
+    for lokasi_citra_uji in daftar_citra_uji:
+        if metode == "penipisan":
+            kode_chain_uji = hitung_freeman_chain_code(penipisan_citra(lokasi_citra_uji))
+        else: 
+            kode_chain_uji = hitung_freeman_chain_code(ekstra_citra(lokasi_citra_uji))
+        digit_terkenali = kenali_digit(kode_chain_uji, basis_pengetahuan)
+        digit.append(digit_terkenali)
+    joined_digits = ''.join(map(str, digit))
+    return joined_digits
+
+def deteksi_gambar(daftar_gambar,metode):
+    ekstra , penipisan = simpan_gambar()
+    daftar_citra_uji = [('static/img/deteksi/'+ gambar.filename) for gambar in daftar_gambar]
+    print("daftar gambar bos =", daftar_citra_uji)
+    if metode == "penipisan":
+        knowladge = penipisan
+    else:
+        knowladge = ekstra
+
+    hasil = uji_pengenalan_angka(daftar_citra_uji, knowladge, metode)
+    return hasil
 

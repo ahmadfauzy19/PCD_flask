@@ -229,6 +229,43 @@ def counting():
     hasil = image_processing.counting()
     return render_template("counting.html",Hasil = hasil, file_path="img/img_now.jpg")
 
+@app.route("/deteksi")
+@nocache
+def deteksi():
+    target = os.path.join(APP_ROOT, "static/img/deteksi")
+    for file_name in os.listdir(target):
+        file_path = os.path.join(target, file_name)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    return render_template('deteksi.html')
+
+@app.route("/upload_deteksi", methods=["POST"])
+@nocache
+def upload_deteksi():
+    target = os.path.join(APP_ROOT, "static/img/deteksi")
+    digit = 0
+    img_list = []
+    img_list_name = []
+    if not os.path.isdir(target):
+        if os.name == 'nt':
+            os.makedirs(target)
+        else:
+            os.mkdir(target)
+    for gambar in request.files.getlist('file'):
+        digit+=1
+        img_list.append(gambar)
+        img_list_name.append(gambar.filename)
+        gambar.save(f"static/img/deteksi/" + gambar.filename)
+    metode = request.form["metode"]
+    hasil = image_processing.deteksi_gambar(img_list,metode)
+    return render_template("deteksi_gambar.html",List = img_list_name, Hasil = hasil)
+
+@app.route("/simpan_gambar")
+@nocache
+def simpan_gambar():
+    image_processing.simpan_gambar()
+    return render_template('deteksi.html') 
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")

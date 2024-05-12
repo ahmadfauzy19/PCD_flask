@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Masukkan Gambar</h1>
+        <form action="{{ url_for('upload_deteksi') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div id="imageInputs">
+                <div class="mb-3">
+                    <label for="inputGroupFile04" class="form-label">Input Gambar</label>
+                    <input name="file" type="file" class="form-control imageInput" accept="image/*">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="selectOption" class="form-label">Pilih Metode Deteksi</label>
+                <select name="metode" class="form-select" id="selectOption">
+                    <option value="penipisan">Penipisan</option>
+                    <option value="ekstra">Ekstra</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addImageInput()">Tambah Foto</button>
+            <button type="submit" class="btn btn-primary">Deteksi Gambar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
