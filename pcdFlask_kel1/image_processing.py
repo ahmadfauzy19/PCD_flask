@@ -160,56 +160,44 @@ def brightness_division():
 
 def convolution(img, kernel):
     h_img, w_img, _ = img.shape
-    out = np.zeros((h_img-2, w_img-2), dtype=np.float)
-    new_img = np.zeros((h_img-2, w_img-2, 3))
-    if np.array_equal((img[:, :, 1], img[:, :, 0]), img[:, :, 2]) == True:
-        array = img[:, :, 0]
+    out = np.zeros((h_img-2, w_img-2), dtype=np.float32)  # Menggunakan np.float32 untuk array keluaran
+    new_img = np.zeros((h_img-2, w_img-2, 3), dtype=np.uint8)
+    
+    for channel in range(3):
+        array = img[:, :, channel]
         for h in range(h_img-2):
             for w in range(w_img-2):
                 S = np.multiply(array[h:h+3, w:w+3], kernel)
                 out[h, w] = np.sum(S)
         out_ = np.clip(out, 0, 255)
-        for channel in range(3):
-            new_img[:, :, channel] = out_
-    else:
-        for channel in range(3):
-            array = img[:, :, channel]
-            for h in range(h_img-2):
-                for w in range(w_img-2):
-                    S = np.multiply(array[h:h+3, w:w+3], kernel)
-                    out[h, w] = np.sum(S)
-            out_ = np.clip(out, 0, 255)
-            new_img[:, :, channel] = out_
-    new_img = np.uint8(new_img)
+        new_img[:, :, channel] = out_
+    
     return new_img
 
 
 def edge_detection():
     img = Image.open("static/img/img_now.jpg")
-    img_arr = np.asarray(img, dtype=np.int)
-    kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+    img_arr = np.asarray(img, dtype=np.uint8)
+    kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]], dtype=np.float32)
     new_arr = convolution(img_arr, kernel)
     new_img = Image.fromarray(new_arr)
-    new_img.save("static/img/img_now.jpg")
+    new_img.save("static/img/img_now_edge_detected.jpg")
 
 
 def blur():
-    img = Image.open("static/img/img_now.jpg")
-    img_arr = np.asarray(img, dtype=np.int)
-    kernel = np.array(
-        [[0.0625, 0.125, 0.0625], [0.125, 0.25, 0.125], [0.0625, 0.125, 0.0625]])
-    new_arr = convolution(img_arr, kernel)
-    new_img = Image.fromarray(new_arr)
-    new_img.save("static/img/img_now.jpg")
+    img = cv2.imread("static/img/img_now.jpg")
+    blurred_img = cv2.GaussianBlur(img, (15, 15), 0)  # Adjust the kernel size as needed
+    cv2.imwrite("static/img/img_now_blurred.jpg", blurred_img)
+
 
 
 def sharpening():
     img = Image.open("static/img/img_now.jpg")
-    img_arr = np.asarray(img, dtype=np.int)
-    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    img_arr = np.asarray(img, dtype=np.uint8)
+    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]], dtype=np.float32)
     new_arr = convolution(img_arr, kernel)
     new_img = Image.fromarray(new_arr)
-    new_img.save("static/img/img_now.jpg")
+    new_img.save("static/img/img_now_sharpened.jpg")
 
 
 def hitung_histogram(img_path):
