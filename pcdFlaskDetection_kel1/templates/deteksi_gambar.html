@@ -1,0 +1,25 @@
+{% extends "layout.html" %} 
+{% block body %}
+<div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid text-center">
+        <div class="container">
+            <h3 class="mb-4">Hasil Deteksi Gambar</h3>
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <ul class="list-unstyled d-flex flex-wrap justify-content-center">
+                        {% for image in List %}
+                            <li class="mr-3 mb-3"><img src="{{ url_for('static', filename='img/deteksi/' + image) }}" alt="Gambar" style="max-height: 200px;"></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <h4 class="mt-4">Hasil Deteksi:</h4>
+                    <p>{{ Hasil }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

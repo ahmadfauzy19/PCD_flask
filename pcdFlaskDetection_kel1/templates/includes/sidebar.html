@@ -1,0 +1,601 @@
+<style>
+  .sidebar-item .sidebar-link {
+    background-color: #fff; /* White background */
+    border: none;
+    width: 100%;
+  }
+  /* Add styles for the overlay */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent; /* Make it transparent */
+    z-index: 999; /* Ensure it's above the sidebar */
+    display: none; /* Initially hidden */
+  }
+</style>
+<!-- Sidebar Start -->
+<aside class="left-sidebar">
+  <!-- Sidebar scroll-->
+  <div>
+    <div class="brand-logo d-flex align-items-center justify-content-between">
+      <a href="" class="text-nowrap logo-img">
+        <img
+          src="{{ url_for('static', filename='assets/images/logos/dark-logo.svg') }}"
+          width="180"
+          alt=""
+        />
+      </a>
+      <div
+        class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
+        id="sidebarCollapse"
+      >
+        <i class="ti ti-x fs-8"></i>
+      </div>
+    </div>
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+      <ul id="sidebarnav">
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Home</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('about') }}"
+            method=""
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Data Kelompok</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('index') }}"
+            method=""
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Tambah Gambar</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('deteksi') }}"
+            method=""
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Deteksi Gambar</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('video_feed') }}"
+            method=""
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Deteksi Isyarat</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Umum</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('normal') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Normal</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('grayscale') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Grayscale</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('zoomin') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Zoomin</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('zoomout') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Zoomout</span>
+            </button>
+          </form>
+        </li>
+        <!-- <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Pergeseran</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('move_left') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Kiri</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('move_right') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Kanan</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('move_up') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Atas</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('move_down') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Bawah</span>
+            </button>
+          </form>
+        </li> -->
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Penerangan</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('brightness_multiplication') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Terang *</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('brightness_division') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Gelap /</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('brightness_addition') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Terang +</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('brightness_substraction') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Gelap -</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Analisis Gambar</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('histogram_rgb') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Histogram</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Pemrosesan</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('histogram_equalizer') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Histogram Equalizer</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Morfologi</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('dilasi') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Dilasi</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('erosi') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Erosi</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('opening') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Opening</span>
+            </button>
+          </form>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('closing') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Closing</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Hitung Objek</span>
+        </li>
+        <li class="sidebar-item">
+          <form
+            id=""
+            action="{{ url_for('counting') }}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <button
+              type="submit"
+              class="sidebar-link custom-width"
+              aria-expanded="false"
+            >
+              <span>
+                <i class="ti ti-layout-dashboard"></i>
+              </span>
+              <span class="hide-menu">Count</span>
+            </button>
+          </form>
+        </li>
+        <!-- <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Filter</span>
+          </li>
+          <li class="sidebar-item">
+            <form id="" action="{{ url_for('edge_detection') }}" method="POST" enctype="multipart/form-data">
+              <button type="submit" class="sidebar-link custom-width" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Edge Detection</span>
+              </button>
+            </form>
+          </li>
+          <li class="sidebar-item">
+            <form id="" action="{{ url_for('blur') }}" method="POST" enctype="multipart/form-data">
+              <button type="submit" class="sidebar-link custom-width" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Blur</span>
+              </button>
+            </form>
+          </li>
+          <li class="sidebar-item">
+            <form id="" action="{{ url_for('sharpening') }}" method="POST" enctype="multipart/form-data">
+              <button type="submit" class="sidebar-link custom-width" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Sharpening</span>
+              </button>
+            </form>
+          </li> -->
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Segmentation</span>
+        </li>
+        <li class="sidebar-item">
+          <div class="p-2 flex-fill bd-highlight">
+            <form
+              id=""
+              action="{{ url_for('thresholding') }}"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <div class="form-group">
+                <label for="lower_thres">Batas Bawah</label>
+                <input
+                  type="number"
+                  name="lower_thres"
+                  id="lower_thres"
+                  class="form-control"
+                  placeholder="0-255"
+                  max="255"
+                  required
+                />
+              </div>
+              <div class="form-group " style="margin-top: 10px">
+                <label for="upper_thres">Batas Atas</label>
+                <input
+                  type="number"
+                  name="upper_thres"
+                  id="upper_thres"
+                  class="form-control"
+                  placeholder="0-255"
+                  max="255"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="sidebar-link custom-width"
+                style="margin-top: 10px"
+              >
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">thresholding</span>
+              </button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+  <div class="sidebar-overlay"></div>
+</aside>
+<!--  Sidebar End -->

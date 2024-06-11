@@ -1,0 +1,63 @@
+{% extends "layout.html" %} 
+{% block body %}
+<div class="jumbotron jumbotron-fluid text-center">
+  <div class="container">
+    <h3 class="text-center mb-4">After</h3>
+    <div class="d-flex justify-content-center">
+      <img
+        class="img-fluid"
+        src="{{ url_for('static', filename='img/img_now.jpg') }}"
+        alt="image here"
+        style="max-width: 30%; height: auto"
+      />
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        {% if file_paths[2] %}
+        <div class="col-md-4">
+          <h3 style="margin-top: 20px;">Red Histogram</h3>
+          <img
+            class="img-fluid"
+            src="{{ url_for('static', filename=file_paths[0]) }}"
+            alt="image here"
+            style="max-width: 150%; height: auto"
+          />
+        </div>
+        <div class="col-md-4">
+          <h3 style="margin-top: 20px;">Green Histogram</h3>
+          <img
+            class="img-fluid"
+            src="{{ url_for('static', filename=file_paths[1]) }}"
+            alt="image here"
+            style="max-width: 150%; height: auto"
+          />
+        </div>
+        <div class="col-md-4">
+          <h3 style="margin-top: 20px;">Blue Histogram</h3>
+          <img
+            class="img-fluid"
+            src="{{ url_for('static', filename=file_paths[2]) }}"
+            alt="image here"
+            style="max-width: 150%; height: auto"
+          />
+        </div>
+        {% else %}
+        <div class="col-md-4">
+          <h3 style="margin-top: 20px;">Histogram</h3>
+          <img
+            class="img-fluid"
+            src="{{ url_for('static', filename=file_paths[0]) }}"
+            alt="image here"
+            style="max-width: 150%; height: auto"
+          />
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

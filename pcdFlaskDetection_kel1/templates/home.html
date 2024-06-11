@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Masukkan Gambar</h1>
+        <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="inputGroupFile04" class="form-label">Input Gambar</label>
+                <input name="file" type="file" class="form-control" id="inputGroupFile04" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

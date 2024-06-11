@@ -1,0 +1,5 @@
+0 I Love You
+1 Takut
+2 Maaf
+3 Kecewa
+4 Thank You
